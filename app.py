@@ -35,7 +35,7 @@ def question_0(question_num):
 @app.post("/answer")
 def answer():
     """answer for the question"""
-
+    global response
     # put answer in responses
     answer = request.form.get('answer')
     response.append(answer)
@@ -43,12 +43,25 @@ def answer():
 
     print(f"\n\n\ncurrent response: {response}\n\n\n")
 
-    if len(response) < 4:
+    if len(survey.questions) == len(response):
+
+
+        saved_response = response[::1]
+        response = []
+
+        flash("Thank you")
+        return redirect("/end_page")
+    else:
         flash("please fill out the answer")
         return redirect(f"/question/{len(response)}")
-    else:
-        flash("thanks for completing the survey")
-        # end page -> 
+
+
+        # end page ->
+
+@app.get("/end_page")
+def end_page():
+
+    return render_template("completion.html")
 
 
 
