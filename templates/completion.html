@@ -3,9 +3,11 @@
 {% block content %}
 
 <h1>Thanks for completing this survey!</h1>
+<p>We recorded the following responses for you:</p>
 <ul>
   {% for q in questions %}
-  <li>{{ q.prompt }}: {{ responses[q] }}</li>
+  <li><b>{{q.prompt}}</b>
+    {{response[loop.index0]}}</li>
   {% endfor %}
 
 </ul>

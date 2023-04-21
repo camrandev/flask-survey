@@ -44,11 +44,6 @@ def answer():
     print(f"\n\n\ncurrent response: {response}\n\n\n")
 
     if len(survey.questions) == len(response):
-
-
-        saved_response = response[::1]
-        response = []
-
         flash("Thank you")
         return redirect("/end_page")
     else:
@@ -56,23 +51,14 @@ def answer():
         return redirect(f"/question/{len(response)}")
 
 
-        # end page ->
-
 @app.get("/end_page")
 def end_page():
     global response
-    #attach respones to survey object
-    # survey['responses'] = response
-    # answers = response
-    #access the question prompts
+    saved_response = response[::1]
+    response = []
     questions = survey.questions
-    #pass those into the completion template
-    # context = {'zip': zip, 'questions': questions, 'answers': answers}
 
-    # zipped = zip(questions, answers)
-    # return render_template('example.html', zipped=zipped)
-
-    return render_template("completion.html", questions=questions, responses=response)
+    return render_template("completion.html", questions=questions, response=saved_response)
 
 
 
