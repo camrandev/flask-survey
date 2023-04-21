@@ -60,8 +60,19 @@ def answer():
 
 @app.get("/end_page")
 def end_page():
+    global response
+    #attach respones to survey object
+    # survey['responses'] = response
+    # answers = response
+    #access the question prompts
+    questions = survey.questions
+    #pass those into the completion template
+    # context = {'zip': zip, 'questions': questions, 'answers': answers}
 
-    return render_template("completion.html")
+    # zipped = zip(questions, answers)
+    # return render_template('example.html', zipped=zipped)
+
+    return render_template("completion.html", questions=questions, responses=response)
 
 
 
