@@ -19,9 +19,38 @@ def user_home():
 @app.post("/begin")
 def start_button():
     """start button that will redirect the page to a question page"""
+    session["responses"] = []
 
     flash("please fill out the answer")
-    return redirect("/question/0")
+    return redirect(f"/question/0")
+
+
+@app.post("/answer")
+def answer():
+    """answer for the question"""
+    #old code
+    global response
+
+    answer = request.form.get('answer')
+    #update the session with the answer
+    responses = session['responses']
+    responses.append(answer)
+    session['responses'] = responses
+
+
+
+    # old code
+    response.append(answer)
+
+
+    print(f"\n\n\ncurrent response: {responses}\n\n\n")
+
+    if len(survey.questions) == len(responses):
+        flash("Thank you")
+        return redirect("/end_page")
+    else:
+        flash("please fill out the answer")
+        return redirect(f"/question/{len(responses)}")
 
 @app.get("/question/<int:question_num>")
 def question_0(question_num):
@@ -31,24 +60,6 @@ def question_0(question_num):
     # print(survey.questions)
 
     return render_template("question.html",question = question )
-
-@app.post("/answer")
-def answer():
-    """answer for the question"""
-    global response
-    # put answer in responses
-    answer = request.form.get('answer')
-    response.append(answer)
-
-
-    print(f"\n\n\ncurrent response: {response}\n\n\n")
-
-    if len(survey.questions) == len(response):
-        flash("Thank you")
-        return redirect("/end_page")
-    else:
-        flash("please fill out the answer")
-        return redirect(f"/question/{len(response)}")
 
 
 @app.get("/end_page")
