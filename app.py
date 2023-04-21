@@ -52,6 +52,11 @@ def question_0(question_num):
     if question_num == len(responses):
         question = survey.questions[question_num]
         return render_template("question.html",question = question )
+
+    if len(survey.questions) == len(responses):
+        flash('you have already completed the survey')
+        return redirect('/end_page')
+
     else:
         flash('please complete the survey in order')
         return redirect(f"/question/{len(responses)}")
