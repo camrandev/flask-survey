@@ -8,8 +8,6 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 debug = DebugToolbarExtension(app)
 
-response = []
-
 @app.get("/")
 def user_home():
     """home page"""
@@ -28,19 +26,12 @@ def start_button():
 @app.post("/answer")
 def answer():
     """answer for the question"""
-    #old code
-    global response
-
     answer = request.form.get('answer')
+
     #update the session with the answer
     responses = session['responses']
     responses.append(answer)
     session['responses'] = responses
-
-
-
-    # old code
-    response.append(answer)
 
 
     print(f"\n\n\ncurrent response: {responses}\n\n\n")
@@ -56,20 +47,24 @@ def answer():
 def question_0(question_num):
     """get question 0"""
 
-    question = survey.questions[question_num]
-    # print(survey.questions)
+    responses = session['responses']
 
-    return render_template("question.html",question = question )
+    if question_num == len(responses):
+        question = survey.questions[question_num]
+        return render_template("question.html",question = question )
+    else:
+        flash('please complete the survey in order')
+        return redirect(f"/question/{len(responses)}")
+
+
 
 
 @app.get("/end_page")
 def end_page():
-    global response
-    saved_response = response[::1]
-    response = []
+    responses = session['responses']
     questions = survey.questions
 
-    return render_template("completion.html", questions=questions, response=saved_response)
+    return render_template("completion.html", questions=questions, response=responses)
 
 
 
